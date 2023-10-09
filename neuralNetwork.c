@@ -7,6 +7,10 @@
 #define NUM_OUTPUT 1
 #define NUM_TRAINING_SET 4
 
+double init_weights();
+double sigmoid(double x);
+double dSigmoid(double x);
+
 int main(void) {
 
     // learning rate
@@ -32,4 +36,19 @@ int main(void) {
                                                             {0.0f}};
     
     
+}
+
+// initializes the wheights with random numbers between 0 and 1
+double init_weights() {
+    // returns "randomNumber" / "maximumRandomNumber"
+    return ((double) rand()) / ((double) RAND_MAX);
+}
+
+double sigmoid(double x) {
+    return 1 / (1 +exp(-x));
+}
+
+// derivative of sigmoid function
+double dSigmoid(double x) {
+    return x * (1 - x);
 }
