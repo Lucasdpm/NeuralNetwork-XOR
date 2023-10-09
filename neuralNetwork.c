@@ -69,7 +69,9 @@ int main(void) {
         for (int x = 0; x < NUM_TRAINING_SET; x++) {
             int i = trainingSetOrder[x];
 
+
             // foward pass
+
             // compute hidden layer activation
             for (int j = 0; j < NUM_HIDDEN_NODES; j++) {
                 double activation = hiddenLayerBias[j];
@@ -91,10 +93,46 @@ int main(void) {
                 outputLayer[j] = sigmoid(activation);
             }
 
-            printf("Input: %g       Output: %g      Predicted Output: %g \n", 
-                   training_input[i][0], outputLayer[0], training_output[i][0]);
+            printf("Input: %g - %g        Output: %g          Predicted Output: %g \n", 
+                   training_input[i][0], training_input[i][1], outputLayer[0], training_output[i][0]);
             
+            
+            // backpropagation
 
+            // compute change in output weghts
+            double deltaOutput[NUM_OUTPUT];
+
+            for (int j = 0; j < NUM_OUTPUT; j++) {
+                double error = training_output[i][j] - outputLayer[j];
+                deltaOutput[j] = error * dSigmoid(outputLayer[j]);
+            }
+
+            // compute change in hidden weights
+            double deltaHidden[NUM_HIDDEN_NODES];
+            for (int j = 0; j < NUM_OUTPUT; j++) {
+                double error = 0.0f;
+                for (int k = 0; k < NUM_OUTPUT; k++) {
+                    error += deltaOutput[k] * outputWeights[j][k];
+                }
+                deltaHidden[j] = error * dSigmoid(hiddenLayer[j]);
+            }
+
+
+            // apply change in output weights
+            for (int j = 0; j < NUM_OUTPUT; j++) {
+                outputLayerBias[j] += deltaOutput[j] * lr;
+                for (int k = 0; k < NUM_HIDDEN_NODES; k++) {
+                    outputWeights[k][j] +=hiddenLayer[k] * deltaOutput[j] * lr;
+                }
+            }
+
+            // apply change in hidden weights
+            for (int j = 0; j < NUM_HIDDEN_NODES; j++) {
+                hiddenLayerBias[j] += deltaHidden[j] * lr;
+                for (int k = 0; k < NUM_INPUT; k++) {
+                    hiddenWeights[k][j] += training_input[i][k] * deltaHidden[j] * lr;
+                }
+            }
         }
     }
 
