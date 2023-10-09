@@ -61,7 +61,7 @@ int main(void) {
     }
     
     int trainingSetOrder[] = {0, 1, 2, 3};
-    int numOfEpochs = 1000000;
+    int numOfEpochs = 10000;
 
     // train neural network for a number of epochs(epsodes)
     for (int epoch = 0; epoch < numOfEpochs; epoch++) {
