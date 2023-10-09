@@ -49,6 +49,7 @@ int main(void) {
 
     // init all output weights
     for (int i = 0; i < NUM_HIDDEN_NODES; i++) {
+        hiddenLayerBias[i] = init_weights();
         for ( int j = 0; j < NUM_OUTPUT; j++) {
             outputWeights[i][j] = init_weights();
         }
@@ -60,7 +61,7 @@ int main(void) {
     }
     
     int trainingSetOrder[] = {0, 1, 2, 3};
-    int numOfEpochs = 10000;
+    int numOfEpochs = 1000000;
 
     // train neural network for a number of epochs(epsodes)
     for (int epoch = 0; epoch < numOfEpochs; epoch++) {
@@ -103,18 +104,18 @@ int main(void) {
             double deltaOutput[NUM_OUTPUT];
 
             for (int j = 0; j < NUM_OUTPUT; j++) {
-                double error = training_output[i][j] - outputLayer[j];
-                deltaOutput[j] = error * dSigmoid(outputLayer[j]);
+                double errorOutput = (training_output[i][j] - outputLayer[j]);
+                deltaOutput[j] = errorOutput * dSigmoid(outputLayer[j]);
             }
 
             // compute change in hidden weights
             double deltaHidden[NUM_HIDDEN_NODES];
             for (int j = 0; j < NUM_OUTPUT; j++) {
-                double error = 0.0f;
+                double errorHidden = 0.0f;
                 for (int k = 0; k < NUM_OUTPUT; k++) {
-                    error += deltaOutput[k] * outputWeights[j][k];
+                    errorHidden += deltaOutput[k] * outputWeights[j][k];
                 }
-                deltaHidden[j] = error * dSigmoid(hiddenLayer[j]);
+                deltaHidden[j] = errorHidden * dSigmoid(hiddenLayer[j]);
             }
 
 
