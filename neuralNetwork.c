@@ -59,6 +59,45 @@ int main(void) {
         outputLayerBias[i] = init_weights();
     }
     
+    int trainingSetOrder[] = {0, 1, 2, 3};
+    int numOfEpochs = 10000;
+
+    // train neural network for a number of epochs(epsodes)
+    for (int epoch = 0; epoch < numOfEpochs; epoch++) {
+        shuffle(trainingSetOrder, NUM_TRAINING_SET);
+
+        for (int x = 0; x < NUM_TRAINING_SET; x++) {
+            int i = trainingSetOrder[x];
+
+            // foward pass
+            // compute hidden layer activation
+            for (int j = 0; j < NUM_HIDDEN_NODES; j++) {
+                double activation = hiddenLayerBias[j];
+
+                for (int k = 0; k < NUM_INPUT; k++) {
+                    activation += training_input[i][k] * hiddenWeights[k][j];
+                }
+
+                hiddenLayer[j] = sigmoid(activation);
+            }
+            // compute output layer activation
+            for (int j = 0; j < NUM_OUTPUT; j++) {
+                double activation = outputLayerBias[j];
+
+                for (int k = 0; k < NUM_HIDDEN_NODES; k++) {
+                    activation += hiddenLayer[k] * outputWeights[k][j];
+                }
+                
+                outputLayer[j] = sigmoid(activation);
+            }
+
+            printf("Input: %g       Output: %g      Predicted Output: %g \n", 
+                   training_input[i][0], outputLayer[0], training_output[i][0]);
+            
+
+        }
+    }
+
 }
 
 
